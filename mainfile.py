@@ -27,9 +27,12 @@ def run(playwright):
     if not email or not password:
         raise ValueError("Please set the email and password environment variables in your .env file.")
 
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-    page = context.new_page()
+    browser = playwright.chromium.launch_persistent_context(
+        user_data_dir=os.path.expanduser("~/Library/Application Support/Google/Chrome/Default"),
+        headless=False,
+        executable_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    )
+    page = browser.new_page()
 
     try:
         page.goto("https://vitvellore312.examly.io/login")
