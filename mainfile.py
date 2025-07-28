@@ -28,9 +28,13 @@ def run(playwright):
         raise ValueError("Please set the email and password environment variables in your .env file.")
 
     browser = playwright.chromium.launch_persistent_context(
-        user_data_dir=os.path.expanduser("~/Library/Application Support/Google/Chrome/Default"),
+        user_data_dir="/tmp/playwright-chrome-profile",
         headless=False,
-        executable_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        executable_path="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        args=[
+            "--disable-extensions-except=/Users/samarthnaik/Library/Application Support/Google/Chrome/Default/Extensions/deojfdehldjjfmcjcfaojgaibalafifc/3.3_0",
+            "--load-extension=/Users/samarthnaik/Library/Application Support/Google/Chrome/Default/Extensions/deojfdehldjjfmcjcfaojgaibalafifc/3.3_0"
+        ]
     )
     page = browser.new_page()
 
@@ -40,7 +44,7 @@ def run(playwright):
         # Fill in email and click next
         page.locator("input#email").fill(email)
         page.locator("button:has-text('Next')").click()
-        time.sleep(5)
+        time.sleep(10)
         # Wait for the password input to be visible
         page.wait_for_selector("input#password", timeout=10000)
 
@@ -90,6 +94,7 @@ def run(playwright):
         test_button.first.wait_for(state='visible')
         test_button.first.click()
         print("🚀 Test launched (Take/Resume)")
+        #time.sleep(60)
         time.sleep(3)
         agree_button = page.locator("button:has-text('Agree & Proceed')")
         agree_button.first.wait_for(state="visible")
